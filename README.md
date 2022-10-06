@@ -12,8 +12,8 @@ that there are four separate stations, for one station of one pair<br>
 may be colocated with one station of the other pair forming a<br>
 **Loran Triplets** may be joined "end-to-end" by station<br>
 colocation to form a **Loran chain**. Loran chains are common on both<br>
-the East and West coasts of the North American continent.
-
+the East and West coasts of the North American continent.<br>
+- POSITION DETERMINATION WITH LORAN-C TRIPLETS
 
 
 ## TRS-80 Model 100 Emulator
