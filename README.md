@@ -17,6 +17,8 @@ http://bitchin100.com/wiki/index.php?title=CloudT_Web_Emulator
 Try using the examples on page 31 (PDF Page 40/53) of the `ADA137009.pdf` document.
 ![loran_usage.png](loran_usage.png)
 
+Partial list of chains can be found here: https://prc68.com/I/Loran-c.shtml
+
 ## Manual on using the program
 
 https://apps.dtic.mil/sti/pdfs/ADA137009.pdf
