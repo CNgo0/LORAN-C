@@ -9,6 +9,7 @@ http://bitchin100.com/wiki/index.php?title=CloudT_Web_Emulator
 1. Navigate to "BASIC"
 2. Load code from https://github.com/Auios/LoranC/blob/main/LORAN into the "cassette tape"
 3. You can upload the file in two ways. You can upload the file using the upload file option or you can copy paste the file into the plain text box. Either method you will need to use the file's name. Use `CLOAD "LORAN"` to load the file from the "cassette" into the machine's memory.
+![loran_upload.png](loran_upload.png)
 4. Use `RUN` to run the program.
 5. Use option 8 to set the `Chain` / `GRI`
 7. Use option 1 to convert LORAN numbers to Lat/Lon
