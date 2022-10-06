@@ -14,7 +14,7 @@ may be colocated with one station of the other pair forming a<br>
 colocation to form a **Loran chain**. Loran chains are common on both<br>
 the East and West coasts of the North American continent.
 
-From: ![POSITION DETERMINATION WITH LORAN-C TRIPLETS](https://apps.dtic.mil/sti/pdfs/ADA137009.pdf)
+From: [POSITION DETERMINATION WITH LORAN-C TRIPLETS](https://apps.dtic.mil/sti/pdfs/ADA137009.pdf)
 
 
 ## TRS-80 Model 100 Emulator
