@@ -14,6 +14,7 @@ http://bitchin100.com/wiki/index.php?title=CloudT_Web_Emulator
 7. Use option 1 to convert LORAN numbers to Lat/Lon
 
 Try using the examples on page 31 (PDF Page 40/53) of the `ADA137009.pdf` document.
+![loran_usage.png](loran_usage.png)
 
 ## Manual on using the program
 
