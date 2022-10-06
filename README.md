@@ -1,5 +1,21 @@
 # LoranC
 
+## What is this?
+The Loran system is a radio aid to navigation which utilizes<br>
+the principle of hyperbolic fixing. The locus of points for which<br>
+the difference in arrival time of synchronized signals from a pair<br>
+of transmitters is constant determines a hyperbolic line of<br>
+positions. The intersection of two hyperbolic lines of position<br>
+from two pairs of stations determines a hyperbolic fix. That two<br>
+pairs of stations are required for a fix does not necessarily mean<br>
+that there are four separate stations, for one station of one pair<br>
+may be colocated with one station of the other pair forming a<br>
+**Loran Triplets** may be joined "end-to-end" by station<br>
+colocation to form a **Loran chain**. Loran chains are common on both<br>
+the East and West coasts of the North American continent.
+
+
+
 ## TRS-80 Model 100 Emulator
 
 http://bitchin100.com/wiki/index.php?title=CloudT_Web_Emulator
