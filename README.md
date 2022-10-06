@@ -1,6 +1,7 @@
 # LoranC
 
 ## TRS-80 Model 100 Emulator
+
 http://bitchin100.com/wiki/index.php?title=CloudT_Web_Emulator
 
 ---
@@ -12,9 +13,12 @@ http://bitchin100.com/wiki/index.php?title=CloudT_Web_Emulator
 5. Use option 1 to convert LORAN numbers to Lat/Lon
 
 ## Manual on using the program
+
 https://apps.dtic.mil/sti/pdfs/ADA137009.pdf
+
 I highly recommend reading this PDF starting on page 1 (or 10 in the PDF file). It will explain the quirks of the program and necessary steps to take in order. It also gives sample input/output. Copying step by step what is done in this book you should get the same exact results.
 
 ## Manual on the TRS-80 Model 100
 If you want to learn more about the computer itself then this manual will do you well.
+
 https://ftp.whtech.com/club100/doc/TRS80-M100-User-Guide.pdf
