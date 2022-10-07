@@ -8,7 +8,9 @@
 185     460     ' Check if GRI has been set, if not then go set it
 190     470     ' Enter 1st GRI
 210     540     ' Enter 2nd GRI
-250     620     ' Math0
+250     620     ' Set F1|F2 depending on P(x,y) and L(x,y).
+                ' Continue to "Working" if pass.
+                ' Else "ERROR NO TRIPLET"
 300     720     ' "ERROR NO TRIPLET."
 310     760     ' "Working"
 330     880     ' Setup variables
