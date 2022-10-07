@@ -40,10 +40,10 @@
 1200    3850    ' Option 7
 1250    4080    ' MOD FCTN (Setup?)
 1260    4100    ' MOD FCTN - Uses variables from
-1270    4130    ' QATN
+1270    4130    ' [QATN] - X=ATN((1-C0)*TAN(X))
 1280    4150    ' Build string?
 1320    4300    ' Print ASF
 1340    4360    ' Math - Set ZZ and AN
 1350    4400    ' ASIN - AN=ATN(SQR(1-XX*XX)/(XX-1E-9*(XX=0)))-PI*(XX<0)
 1360    4430    ' ACOS - Set S, X, H, M0, (MOD Setup), V, X, (MOD Setup), V
-1370    4530    ' X = ACOS(V)*RD
+1370    4530    ' X = ACOS(V)*RD, [QATN]
