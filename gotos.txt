@@ -23,16 +23,16 @@
 470     1190    ' For each tower, GOTO 1240
 490     1240    ' If N = 1|2 then set G$(1|2) to equal the GRI? Setup other variables
 530     1420    ' Exit program
-550     1440    ' Math - Set Z8, Z9, P8, P9, M, C1, C2, D, P, N, YY,
+550     1440    ' Direct Solution - Set Z8, Z9, P8, P9, M, C1, C2, D, P, N, YY,
                 ' XX, (MOD), S1, D0, U, W, V, X, Y, S2, S8, S9, K, P2,
                 ' YY, XX, (MOD), S3, H, L2, YY, XX, (MOD), Z2
-650     1810    ' Math/Reverse Solution
+650     1810    ' Reverse Solution
 770     2330    ' Fixing routine - Calls 1440
-910     2830    ' Enter ITDs
+910     2830    ' Options 1 - Enter ITDs
 940     2920    ' ITD is valid, cont
-950     2980    ' Set A0
+950     2980    ' Option 2 - Set A0
 970     3010    ' Cont. A0 to fixing routine
-990     3050    ' Print origin lat/lon
+990     3050    ' Options 6 - Print origin lat/lon
 1010    3170    ' Print dest lat/lon
 1040    3280    ' Option 4
 1090    3460    ' Option 5
