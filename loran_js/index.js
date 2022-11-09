@@ -9,7 +9,7 @@ const gri9960 = {
     w: new Tower(`46° 48' 27.305"N`, `67° 55' 37.159"W`,  11000),
     x: new Tower(`41° 15' 12.046"N`, `069° 58' 38.536"W`, 27000),
     y: new Tower(`34° 03' 46.17"N`,  `77° 54' 46.21"W`,   40000),
-    z: new Tower(`39° 51' 07.658"N`, `87° 29' 11.586"W`, -1), // Do not use
+    z: new Tower(`39° 51' 07.658"N`, `87° 29' 11.586"W`,  -1), // Do not use
 }
 
 let m = gri9960.m; // M
@@ -53,26 +53,31 @@ let K = B2 * A1 - B1 * A2;
 
 let rho = Math.sqrt(Math.pow(C, 2) + Math.pow(S, 2));
 let gamma = Math.atan2(S, C);
-console.log(K);
-console.log(rho);
-console.log(K / rho);
+
 let alpha = gamma + Math.acos(K / rho);
-let r = Math.atan2(B1 / (C1 * Math.cos(alpha - az1) + A1)); // Using S1 (x)
+// let alpha = gamma + Math.acos((K / rho) / Math.ceil(Math.abs(K / rho)));
+// let alpha = gamma + Math.acos((K / rho) % 1);
 
-let result = Geo.Direct(x.pos, alpha, 100000);
+let r = Math.atan2(B1, (C1 * Math.cos(alpha - az1) + A1)); // Using S1 (x)
+
+let result = Geo.Direct(x.pos, alpha, r);
 console.log(result);
-console.log(alpha);
+console.log(`result: ${result.lat2}, ${result.lon2}`);
+console.log(`alpha: ${alpha}`);
+console.log(`r: ${r}`);
 
 /*
-console.log()
-console.log(`Azimuth:  ${master2w.a12}`);
-console.log(`Distance: ${master2w.s12}`);
-console.log(`Azimuth:  ${master2x.a12}`);
-console.log(`Distance: ${master2x.s12}`);
-
-/*
-Azimuth:  7.53926754217945
-Distance: 837774.1868516725
-Azimuth:  2.951427580632468
-Distance: 327888.115853502
+{
+  lat1: 41.253346111111114,
+  azi1: -51.0131006155562,
+  lon1: -69.97737111111111,
+  a12: -892.2995442139171,
+  s12: -99106460.2824249,
+  lon2: 99.69672676489257,
+  lat2: -45.79454116361348,
+  azi2: -123.08089914164839
+}
+result: -45.79454116361348, 99.69672676489257
+alpha: -0.09021096806011086
+r: -1.577932035336557
 */
