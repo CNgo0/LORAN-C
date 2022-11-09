@@ -55,6 +55,9 @@ https://discover.dtic.mil/
 Preprocessor for TRS-80 BASIC that implements labels for GOTO/GOSUB jumps.<br>
 https://github.com/Auios/Labeled-Basic-Preprocessor
 
+Maps<br>
+https://www.historicalcharts.noaa.gov/
+
 ### Acronyms
 * TD: Time Delay OR Time Difference
 * ASF: Additional Secondary Factor
@@ -73,3 +76,7 @@ Link: [ADA122499.pdf](/pdfs/ADA122499.pdf)
 * Name: *APPLICATION OF ADDITIONAL SECONDARY FACTORIS TO LORAN-C POSITIONS FOR HYDROGRAPHIC OPERATIONS*<br>
 Date: October 1982<br>
 Link: [ADA125620.pdf](/pdfs/ADA125620.pdf)
+
+* Name: *MIT RAD LAB SERIES*<br>
+Date: 1947 - 1953<br>
+Link: [Vol 4 LORAN](https://archive.org/details/mit-rad-lab-series-version-2/VOL_4_Loran)
