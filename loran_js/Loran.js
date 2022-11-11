@@ -13,7 +13,7 @@ class Loran {
   
   static GetTB(masterPos, slavePos) {
     let seconds = Geo.Inverse(masterPos, slavePos).s12 / Constants.speedOfLightAtmosphere;
-    let microseconds = seconds / 1_000_000;
+    let microseconds = seconds * 1_000_000;
     return microseconds;
   }
   
