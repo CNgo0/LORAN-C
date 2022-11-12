@@ -58,13 +58,15 @@ let alpha = gamma + Math.acos(K / rho);
 // let alpha = gamma + Math.acos((K / rho) / Math.ceil(Math.abs(K / rho)));
 // let alpha = gamma + Math.acos((K / rho) % 1);
 
-let r = Math.atan2(B1, (C1 * Math.cos(alpha - az1) + A1)); // Using S1 (x)
+let r1 = Math.atan2(B1, C1 * Math.cos(alpha - az1) + A1); // i = 1
+let r2 = Math.atan2(B2, C2 * Math.cos(alpha - az2) + A2); // i = 2
 
-let result = Geo.Direct(m.pos, alpha, r);
+let result = Geo.Direct(m.pos, alpha, r1);
 console.log(result);
 console.log(`result: ${result.lat2}, ${result.lon2}`);
 console.log(`alpha: ${alpha}`);
-console.log(`r: ${r}`);
+console.log(`r1: ${r1}`);
+console.log(`r2: ${r2}`);
 
 /*
 {
@@ -79,5 +81,6 @@ console.log(`r: ${r}`);
 }
 result: 73.13307203467642, -28.295763980630333
 alpha: 1.3102980645532072
-r: 1.3404816669794215
+r1: 1.3404816669794215
+r2: 1.3404816669794213
 */
