@@ -63,10 +63,12 @@ let r2 = Math.atan2(B2, C2 * Math.cos(alpha - az2) + A2); // i = 2
 
 let result = Geo.Direct(m.pos, alpha, r1);
 console.log(result);
-console.log(`result: ${result.lat2}, ${result.lon2}`);
 console.log(`alpha: ${alpha}`);
 console.log(`r1: ${r1}`);
 console.log(`r2: ${r2}`);
+console.log(`result LL: ${result.lat2}, ${result.lon2}`);
+console.log("actual LL: 43.7666667, -67");
+console.log(`Map: https://www.google.com/maps/dir/${result.lat1},${result.lon1}/43.7666667,-67/${result.lat2},${result.lon2}/`);
 
 /*
 {
@@ -79,8 +81,10 @@ console.log(`r2: ${r2}`);
   lat2: 73.13307203467642,
   azi2: 64.72896212121209
 }
-result: 73.13307203467642, -28.295763980630333
 alpha: 1.3102980645532072
 r1: 1.3404816669794215
 r2: 1.3404816669794213
+result LL: 73.13307203467642, -28.295763980630333
+actual LL: 43.7666667, -67
+Map: https://www.google.com/maps/dir/42.71408777777777,-76.82591888888889/43.7666667,-67/73.13307203467642,-28.295763980630333/
 */
