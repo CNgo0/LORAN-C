@@ -60,7 +60,7 @@ let alpha = gamma + Math.acos(K / rho);
 
 let r = Math.atan2(B1, (C1 * Math.cos(alpha - az1) + A1)); // Using S1 (x)
 
-let result = Geo.Direct(x.pos, alpha, r);
+let result = Geo.Direct(m.pos, alpha, r);
 console.log(result);
 console.log(`result: ${result.lat2}, ${result.lon2}`);
 console.log(`alpha: ${alpha}`);
@@ -68,16 +68,16 @@ console.log(`r: ${r}`);
 
 /*
 {
-  lat1: 41.253346111111114,
+  lat1: 42.71408777777777,
   azi1: 20.95609925039048,
-  lon1: -69.97737111111111,
+  lon1: -76.82591888888889,
   a12: 758.0245243057831,
-  s12: 84234692.40714446,
-  lon2: -24.8948394945011,
-  lat2: 72.14848097120367,
-  azi2: 61.13217200486732
+  s12: 84235417.32741722,
+  lon2: -28.295763980630333,
+  lat2: 73.13307203467642,
+  azi2: 64.72896212121209
 }
-result: 72.14848097120367, -24.8948394945011
+result: 73.13307203467642, -28.295763980630333
 alpha: 1.3102980645532072
 r: 1.3404816669794215
 */
