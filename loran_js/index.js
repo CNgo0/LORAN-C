@@ -1,8 +1,8 @@
-const Geo = require("./Geo");
 const DMS = require("geographiclib-dms");
+
+const Geo = require("./Geo");
 const Loran = require("./Loran");
 const Tower = require("./Tower");
-
 
 const gri9960 = {
     m: new Tower(`42° 42' 50.716"N`, `76° 49' 33.308"W`),
@@ -43,15 +43,15 @@ let B2 = Math.cos(twoA2) - Math.cos(twoC2);
 let C1 = Math.sin(twoC1);
 let C2 = Math.sin(twoC2);
 
-let az1 = master2x.a12 * Math.PI / 180;
-let az2 = master2w.a12 * Math.PI / 180;
+let az1 = master2x.a12 * (Math.PI / 180);
+let az2 = master2w.a12 * (Math.PI / 180);
 
 // Get C, S, K
 let C = B1 * C2 * Math.cos(az2) - B2 * C1 * Math.cos(az1);
 let S = B1 * C2 * Math.sin(az2) - B2 * C1 * Math.sin(az1);
 let K = B2 * A1 - B1 * A2;
 
-let rho = Math.sqrt(Math.pow(C, 2) + Math.pow(S, 2));
+let rho = Math.sqrt(C * C + S * S);
 let gamma = Math.atan2(S, C);
 
 let alpha = gamma + Math.acos(K / rho);
