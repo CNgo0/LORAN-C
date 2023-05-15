@@ -21,6 +21,9 @@ From: [POSITION DETERMINATION WITH LORAN-C TRIPLETS](/pdfs/ADA137009.pdf)
 
 https://bitchin100.com/CloudT/#/M100Display
 
+## Other Emulator
+https://robhagemans.github.io/pcbasic/download.html
+
 ---
 
 1. Navigate to "BASIC"
