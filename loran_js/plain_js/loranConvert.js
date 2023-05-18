@@ -1,95 +1,97 @@
 var A2;
 var A = 0;
 var A_arr = [];
-var A1;
+var A1 = 0;
 var A$;
-var AN;
+var AN = 0;
 var A0 = -1;
 
-var B2;
-var B1;
+var B2 = 0;
+var B1 = 0;
 var B$;
-var B;
+var B = 0;
 var B_arr = [];
 
-var C0;
-var C1;
-var C2;
+var C0 = 0;
+var C1 = 0;
+var C2 = 0;
 var C0$;
 var C$;
-var C;
+var C = 0;
 
-var D;
+var D = 0;
 var D_arr = [];
 var D9_arr = [];
-var D0;
+var D0 = 0;
 
-var E1;
-var E2;
+var E1 = 0;
+var E2 = 0;
 
 var F1 = 1;
 var F2 = 1;
 var C0 = 1 / 298.26;
 var F0 = 0;
 
-var GRI;
+var GRI = 0;
 var G_arr = [];
 var G1$;
 var G2$;
 var G$ = [];
-var G;
+var G = 0;
 
-var H;
+var H = 0;
 
 var I$;
 var I9$;
 
-var K;
+var K = 0;
 
-var L2;
-var L1;
+var L2 = 0;
+var L1 = 0;
 var L1_arr = [];
 var L_arr = [];
-var L0;
-var L;
+L_arr.push([0, 0],[0, 0]);
+var L0 = 0;
+var L = 0;
 var L1_arr = [];
 
-var M;
-var M0;
+var M = 0;
+var M0 = 0;
 
-var N1
-var N2
-var N3
-var N4
-var N5
-var N6
-var N7
-var N8;
+var N1 = 0;
+var N2 = 0;
+var N3 = 0;
+var N4 = 0;
+var N5 = 0;
+var N6 = 0;
+var N7 = 0;
+var N8 = 0;
 var N9 = 15; 
 var N = 0;
-var N0;
+var N0 = 0;
 
 var PI = 4. * Math.atan(1);
 var P$;
-var P2;
+var P2 = 0;
 var P2_arr = [];
-var P8;
-var P9;
-var P;
-var P1;
+var P8 = 0;
+var P9 = 0;
+var P = 0;
+var P1 = 0;
 var P1_arr = [];
 var P_arr = [];
-var P0;
+P_arr.push([0, 0],[0, 0]);
+var P0 = 0;
 
-var R;
+var R = 0;
 var RD = PI / 180;
 
-var S0;
-var S1;
-var S2;
-var S8;
-var S9;
-var S3;
+var S0 = 0;
+var S1 = 0;
+var S2 = 0;
+var S8 = 0;
+var S9 = 0;
+var S3 = 0;
 
 var TP = PI + PI;
 var T = 0;
@@ -98,24 +100,25 @@ var traceList = '';
 
 var U = 0;
 
-var V;
+var V = 0;
 
 var W$ = [];
 var W = 0;
 
-var X;
+var X = 0;
 var XX = 0;
 
 var YY = 0;
 var Y = 0;
 
 var ZZ = 0;
-var Z;
+var Z = 0;
 var Z_arr = [];
+Z_arr.push([0, 0],[0, 0]);
 var Z1 = 0;
-var Z8;
-var Z9;
-var Z2;
+var Z8 = 0;
+var Z9 = 0;
+var Z2 = 0;
 
 function convertLoranToLL(GRI, loran1, loran2) 
 {
@@ -149,20 +152,16 @@ function convertLoranToLL(GRI, loran1, loran2)
         D_arr[i] = towersObj[GRI][slave[i]]['delay'];
         X = P0;
         useAcosQatn();
-        P_arr[0] = typeof(P_arr[0]) == 'undefined' ? [] : P_arr[0];
-        P_arr[0].push(X);
+        P_arr[0][i] = X;
         X = L0;
         acos();
-        L_arr[0] = typeof(L_arr[0]) == 'undefined' ? [] : L_arr[0];
         L_arr[0].push(V * RD);
         X = P1_arr[i];
         useAcosQatn();
-        P_arr[1] = typeof(P_arr[1]) == 'undefined' ? [] : P_arr[1];
-        P_arr[1].push(X);
+        P_arr[1][i] = X;
         X = L1_arr[i];
         acos();
-        L_arr[1] = typeof(L_arr[1]) == 'undefined' ? [] : L_arr[1];
-        L_arr[1].push(V * RD);
+        L_arr[1][i] = V * RD;
     }
 
     setF1AndF2();
@@ -258,11 +257,13 @@ function fixingRoutine() {
 	XX = C;
 
 	modFn();
+	
     G = AN;
 	XX = K / R;
 
 	asin();
 	Z = G + A0 * AN;
+	
 	YY = B2;
 	XX = C2 * Math.cos(Z - E2) + A2;
 	console.log("line 266: " + AN)
@@ -289,13 +290,15 @@ function fixingRoutine() {
 
 	modFnSetup();
 	L = X;
+	
 	//IF L>180 THEN L=L-360
 	L = L > 180 ? L - 360 : L;
 	X = P;
-
+	buildString();
 	P$ = C$;
+	console.log(P$);
 	X = L;
-//console.log("line 295: " + L1)
+	console.log(X)
     buildString();
 }
 
@@ -351,14 +354,11 @@ function setUpVars(i)
 {
     reverseSolution();
     B_arr[i] = S0;
-    Z_arr[0] = typeof(Z_arr[0] == 'undefined') ? [] : Z_arr[0];
     Z_arr[0][i] = Z1; 
-    Z_arr[1] = typeof(Z_arr[1] == 'undefined') ? [] : Z_arr[1];
     Z_arr[1][i] = Z2; 
-
     math4();
 
-    T = 21282.3593 * S0;
+    //T = 21282.3593 * S0;
     if(T >= 537)
     {
         math2();
@@ -400,6 +400,7 @@ function modFn()
 	let xxBoolb = XX < 0 ? -1 : 0;
 	AN = Math.atan(YY / (XX - 0.000000001 * xxBoola)) - Math.PI * xxBoolb;
     //console.log("line 399: " + xxBoolb)
+	console.log(L);
 }
 
 function qatn()
@@ -747,23 +748,29 @@ function logVals(calledFromLine) {
 function buildString()
 {
     C$ = " ";
+	console.log(X);
     if(X < 0)
     {
         C$ = "-";
         X = -X;
     }
+	console.log(X);
     X = X + 1 / 7200;
     X0 = parseInt(X);
+	console.log(X0);
     C$ = C$ + X0.toString() + " ";
+	console.log(C$);
     X = 60 * (X - X0);
     X0 = parseInt(X);
+	console.log(X0);
     let st = 100 + X0;
     X$ = st.toString();
+	console.log(X$);
 
-    console.log("line 760 " + X)
+    console.log(X)
 }
 
-GRI = '9960';
+GRI = 9960;
 var loran1 = 26600;
 var loran2 = 41400;
 
