@@ -757,17 +757,17 @@ function buildString()
 	console.log(X);
     X = X + 1 / 7200;
     X0 = parseInt(X);
-	console.log(X0);
     C$ = C$ + X0.toString() + " ";
-	console.log(C$);
     X = 60 * (X - X0);
     X0 = parseInt(X);
-	console.log(X0);
     let st = 100 + X0;
     X$ = st.toString();
-	console.log(X$);
-
-    console.log(X)
+	C$ = C$ + X$.slice(-2);
+	X = 60 * (X - X0);
+	X0 = parseInt(X);
+	let st2 = 100 + X0;
+	X$ = st2.toString();
+	C$ = C$ + " " + X$.slice(-2);
 }
 
 GRI = 9960;
