@@ -148,14 +148,15 @@ function convertLoranToLL(GRI, loran1, loran2)
 
     for(var i=0;i<2;i++)
     {  
-        G$[i] = slave[i];
+        G$[i] = GRI + slave[i];
+		console.log(G$)
         D_arr[i] = towersObj[GRI][slave[i]]['delay'];
         X = P0;
         useAcosQatn();
         P_arr[0][i] = X;
         X = L0;
         acos();
-        L_arr[0].push(V * RD);
+        L_arr[0][i] = V * RD;
         X = P1_arr[i];
         useAcosQatn();
         P_arr[1][i] = X;
@@ -170,14 +171,17 @@ function convertLoranToLL(GRI, loran1, loran2)
     // process ITDs
     for(let i=0;i<2;i++)
     {
-        A = A + G_arr[i] - D_arr[i] - T_arr[i];
+		//console.log( "Math.abs(A)=" + Math.abs(A),  "T=" + T + " T_arr[0]=" + T_arr[0],  "A=" + A,  "G_arr[0]=" + G_arr[0],  "D_arr[0]=" + D_arr[0],  "i=" + i, );
         console.log(A);
-        console.log(T_arr[i]);
+		A = A + G_arr[i] - D_arr[i] - T_arr[i];
+        console.log(A);
+        //console.log(A);
         if(Math.abs(A) < T_arr[i])
         {  
             ItdValidContinue(i);
-        }
-        ItdValidContinue(i);
+        } else {
+			console.log("ERROR: ITD NOT VALID FOR " + G$[i]);
+		}
     }
     fixingRoutine();
 }
@@ -190,6 +194,7 @@ function directSolution() {
 	P8 = Math.sin(P1);
 	P9 = Math.cos(P1);
 	M = -Z8 * P9;
+	console.log(Z1);
 	C1 = C0 * M;
 	C2 = C0 * (1 - M * M) / 4;
 	D = (1 - C2) * (1 - C2 - C1 * M);
@@ -204,7 +209,9 @@ function directSolution() {
 	U = 2 * (S1 - D0);
 	W = 1 - 2 * P * Math.cos(U);
 	V = Math.cos(U + D0);
+	console.log(X);
 	X = C2 * C2 * Math.sin(D0) * Math.cos(D0 * (2 * V * V - 1));
+	console.log();
 	Y = 2 * P * V * W * Math.sin(D0);
 	S2 = D0 + X - Y;
 	S8 = Math.sin(S2);
@@ -230,10 +237,10 @@ function directSolution() {
 function fixingRoutine() {
 	//traceList += ", " + arguments.callee.name;
 	A1 = F1 * Math.sin(A_arr[0]);
-    console.log(A_arr[0]);
+    console.log(A_arr);
 	B1 = Math.cos(A_arr[0]) - Math.cos(B_arr[0]);
 	C1 = Math.sin(B_arr[0]);
-	console.log(A_arr);
+	//console.log(A_arr);
     A2 = F2 * Math.sin(A_arr[1]);
 	B2 = Math.cos(A_arr[1]) - Math.cos(B_arr[1]);
 	C2 = Math.sin(B_arr[1]);
@@ -255,9 +262,9 @@ function fixingRoutine() {
 	R = Math.sqrt(C * C + S * S);
 	YY = S;
 	XX = C;
-
+	console.log(B_arr);
 	modFn();
-	
+	console.log(AN);
     G = AN;
 	XX = K / R;
 
@@ -266,7 +273,7 @@ function fixingRoutine() {
 	
 	YY = B2;
 	XX = C2 * Math.cos(Z - E2) + A2;
-	console.log("line 266: " + AN)
+	//console.log("line 266: " + AN)
     modFn();
 	S0 = AN;
 
@@ -279,8 +286,9 @@ function fixingRoutine() {
         L1 = L_arr[1][1];
 	}
 	Z1 = Z;
-
+	
 	directSolution();
+	
 	P0 = P2;
 	L0 = L2;
 	P = Math.atan(Math.tan(P0) / (1 - C0));
@@ -294,11 +302,12 @@ function fixingRoutine() {
 	//IF L>180 THEN L=L-360
 	L = L > 180 ? L - 360 : L;
 	X = P;
+	
 	buildString();
 	P$ = C$;
-	console.log(P$);
+	//console.log(P$);
 	X = L;
-	console.log(X)
+	//console.log(X)
     buildString();
 }
 
@@ -312,7 +321,7 @@ function asin()
 function ItdValidContinue(i)
 {
     A_arr[i] = A/21295.8736;
-    console.log(A_arr);
+    //console.log(A_arr);
 }
 
 function doWork()
@@ -325,9 +334,9 @@ function doWork()
         L2 = L_arr[1][i];
         setUpVars(i);
     }
-
     G_arr[0] = 0;
     G_arr[1] = 0;
+	//console.log( "P1=" + P1,  "L1=" + L1,  "P2=" + P2,  "L2=" + L2, );
 }
 
 function math1()
@@ -345,9 +354,18 @@ function math3()
     P = 2.7412979 / T - 0.32774624 - 3 * T;
 }
 
-function math4()
+function math4(i)
 {
     T = 21282.3593 * S0;
+	//T = 21282.3593 * S0;
+    if(T >= 537)
+    {
+        math2();
+    } else {
+        math3();
+    }
+    T_arr[i] = T + P;
+	console.log(T);
 }
 
 function setUpVars(i)
@@ -356,16 +374,7 @@ function setUpVars(i)
     B_arr[i] = S0;
     Z_arr[0][i] = Z1; 
     Z_arr[1][i] = Z2; 
-    math4();
-
-    //T = 21282.3593 * S0;
-    if(T >= 537)
-    {
-        math2();
-    } else {
-        math3();
-    }
-    T_arr[i] = T + P;
+    math4(i);
 }
 
 function useAcosQatn()
@@ -386,6 +395,7 @@ function acos()
     X = V;
     modFnSetup();
     V = S * ((100 * X/60 + parseInt(V)) / 60 + H);
+	//console.log("X=" + X);
 }
 
 function modFnSetup()
@@ -398,9 +408,10 @@ function modFn()
 {
     let xxBoola = XX == 0 ? -1 : 0;
 	let xxBoolb = XX < 0 ? -1 : 0;
-	AN = Math.atan(YY / (XX - 0.000000001 * xxBoola)) - Math.PI * xxBoolb;
+	
+	AN = Math.atan(YY / (XX - 1e-9 * xxBoola)) - PI * xxBoolb;
     //console.log("line 399: " + xxBoolb)
-	console.log(L);
+	//console.log("XX=" + XX + " YY=" + YY);
 }
 
 function qatn()
@@ -414,16 +425,16 @@ function setF1AndF2()
 	F2 = 1;
     $error = false;
 	//IF G1$=G2$ THEN GOTO 300
-	if (P_arr[0][0] == P_arr[0][1] && L_arr[0][0] && L_arr[0][1]) {
+	if (P_arr[0][0] == P_arr[0][1] && L_arr[0][0] != 0 && L_arr[0][1] != 0) {
 		F2 = -1;
 	}
-	else if (P_arr[0][0] == P_arr[1][1] && L_arr[0][0] && L_arr[1][1]) {
+	else if (P_arr[0][0] == P_arr[1][1] && L_arr[0][0] != 0 && L_arr[1][1] != 0) {
 		F1 = -1;
 	}
-	else if (P_arr[1][0] == P_arr[1][1] && L_arr[1][0] && L_arr[1][1]) {
+	else if (P_arr[1][0] == P_arr[1][1] && L_arr[1][0] != 0 && L_arr[1][1] != 0) {
 		F2 = 2;
 	}
-	else if (P_arr[1][0] = P_arr[0][1] && L_arr[1][0] && L_arr[0][1]) {
+	else if (P_arr[1][0] = P_arr[0][1] && L_arr[1][0] != 0 && L_arr[0][1] != 0) {
         F1 = 1;
         F2 = 1;
     } else {
@@ -435,8 +446,8 @@ function setZzAndAn()
 {
     ZZ = Math.sqrt(1 - XX * XX);
     let boola = ZZ == 0 ? -1 : 0;
-    let boolb = XX < 0 ? -1 : 0;
-    AN = Math.atan(Math.sqrt(1 - XX * XX) / (XX -1e-9 * boola)) - PI * boolb;
+	AN = Math.atan(XX / (ZZ -1e-9 * boola));
+	//console.log(AN);
 }
 
 // reverse solution - was basic subroutine 650
@@ -457,15 +468,19 @@ function reverseSolution() {
     setZzAndAn();
 
 	D0 = 2 * AN;
+	//console.log(AN);
 	U = 2 * P8 * P8 * P7 * P7 / (1 - L);
 	V = 2 * P6 * P6 * P9 * P9 / L;
 	X = U + V;
 	Y = U - V;
 	T = D0 / Math.sin(D0);
+	
 	D = 4 * T * T;
-
 	E = 2 * Math.cos(D0);
 	A = D * E;
+	//console.log(A);
+
+	//console.log("---------");console.log( "AN=" + AN + "   D0=" + D0,  "U=" + U,  "V=" + V,  "X=" + X,  "Y=" + Y,  "T=" + T,  "D=" + D,  "T=" + T,  "E=" + E,  "A=" + A, );
 	C = T - (A - E) / 2;
 	N1 = X * (A + C * X);
 	B = D + D;
@@ -770,10 +785,38 @@ function buildString()
 	C$ = C$ + " " + X$.slice(-2);
 }
 
+function buildDebugStrings(vars)
+{
+	var basicString = 'PRINT ';
+	var jsString = 'console.log(';
+	var ret = [];
+	for(vr of vars)
+	{
+		vars
+		basicString += ' "' + vr + '=";' + vr + ';';
+		jsString += ' "' + vr + '=" + ' + vr + ', ';
+	}
+	ret['bas'] = basicString;
+	ret['js'] = jsString + ');';
+	return ret;
+}
+//let dbg = buildDebugStrings(['D0','U','V','X','Y','T','D','T','E','A']);
+//console.log(dbg.js);
+//console.log(dbg.bas);
+
 GRI = 9960;
 var loran1 = 26600;
 var loran2 = 41400;
 
 convertLoranToLL(GRI, loran1, loran2);
 console.log("LAT  = " + P$ + ", LONG = " + C$);
-logVals(577);
+//logVals(577);
+/*
+		The condition below (from line 179) is never met, so no ITD is processed as valid ()
+		if(Math.abs(A) < T_arr[i])
+        {  
+            ItdValidContinue(i);
+        } else {
+			console.log("ERROR: ITD NOT VALID FOR " + G$[i]);
+		}
+*/
