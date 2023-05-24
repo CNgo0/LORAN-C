@@ -43,6 +43,7 @@ var H = 0;
 
 var I$;
 var I9$;
+var ITD;
 
 var K = 0;
 
@@ -92,11 +93,13 @@ var S2 = 0;
 var S8 = 0;
 var S9 = 0;
 var S3 = 0;
+var slave1;
+var slave2;
 
 var TP = PI + PI;
 var T = 0;
 var T_arr = [];
-var traceList = '';
+var traceList = '<table>';
 
 var U = 0;
 
@@ -119,9 +122,12 @@ var Z1 = 0;
 var Z8 = 0;
 var Z9 = 0;
 var Z2 = 0;
+var logged = false;
 
 function convertLoranToLL(GRI, loran1, loran2) 
 {
+	//traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	//traceList += "<td>X=" + X + "</td></tr>";
     // find sub (slave) towers 
     let slave = []
 	slave[0] = slave1 = findSlave(GRI, loran1);
@@ -129,6 +135,8 @@ function convertLoranToLL(GRI, loran1, loran2)
 
     G1$ = GRI + slave[0];
 	G2$ = GRI + slave[1];
+
+	D_arr.push(loran1, loran2);
 
     // get coords and delays for all towers in this GRI triad
 	towersObj = getTowerData();
@@ -139,7 +147,9 @@ function convertLoranToLL(GRI, loran1, loran2)
 	L2 = towersObj[GRI][slave2]['long'];
 	P1_arr.push(P1);
 	L1_arr.push(L1);
+	D9_arr.push(towersObj[GRI][slave1]['delay']);
 	D9_arr.push(towersObj[GRI][slave2]['delay']);
+	//console.log(D9_arr)
 	P1_arr.push(P2);
 	L1_arr.push(L2);
 
@@ -149,34 +159,40 @@ function convertLoranToLL(GRI, loran1, loran2)
     for(var i=0;i<2;i++)
     {  
         G$[i] = GRI + slave[i];
-		console.log(G$)
-        D_arr[i] = towersObj[GRI][slave[i]]['delay'];
+		//console.log(G$)
+        c = towersObj[GRI][slave[i]]['delay'];
         X = P0;
         useAcosQatn();
+		
         P_arr[0][i] = X;
         X = L0;
         acos();
+		
         L_arr[0][i] = V * RD;
         X = P1_arr[i];
         useAcosQatn();
+		
         P_arr[1][i] = X;
         X = L1_arr[i];
         acos();
+		
         L_arr[1][i] = V * RD;
     }
 
     setF1AndF2();
-    doWork();
-    
+    //console.log(A);
+	//console.log(D9_arr);
     // process ITDs
+	//var ITD;
     for(let i=0;i<2;i++)
     {
-		//console.log( "Math.abs(A)=" + Math.abs(A),  "T=" + T + " T_arr[0]=" + T_arr[0],  "A=" + A,  "G_arr[0]=" + G_arr[0],  "D_arr[0]=" + D_arr[0],  "i=" + i, );
-        console.log(A);
-		A = A + G_arr[i] - D_arr[i] - T_arr[i];
-        console.log(A);
-        //console.log(A);
-        if(Math.abs(A) < T_arr[i])
+		ITD = D_arr[i];
+		//ITD$ = ITD$ + $ASF[$i] - $Del[$i] - $APF[$i];
+		ITD = ITD + G_arr[i] - D9_arr[i] - T_arr[i];
+		//console.log("ITD=" + ITD+ " D9_arr[i]=" + D9_arr[i] + " G_arr[i]=" + G_arr[i] + " D_arr[i]=" + D_arr[i] + " T_arr[i]" + T_arr[i]);
+		//if (abs($ITD) >= $APF[$i]) {
+		//console.log("Math.abs(ITD)=" + Math.abs(ITD) + " T_arr[i]=" + T_arr[i]);
+        if(Math.abs(ITD) < T_arr[i])
         {  
             ItdValidContinue(i);
         } else {
@@ -186,15 +202,26 @@ function convertLoranToLL(GRI, loran1, loran2)
     fixingRoutine();
 }
 
+function ItdValidContinue(i)
+{
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+    A_arr[i] = ITD/21295.8736;
+    //console.log(ITD);
+}
+
 // Direct Solution - was basic subroutine 550
 function directSolution() {
-	traceList += ", " + arguments.callee.name;
+	//Z1 = isNaN(Z1) ? 0 : Z1;
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>Z1=" + Z1 + "</td></tr>";
+	//console.log(arguments);
 	Z8 = Math.sin(Z1);
 	Z9 = Math.cos(Z1);
 	P8 = Math.sin(P1);
 	P9 = Math.cos(P1);
 	M = -Z8 * P9;
-	console.log(Z1);
+	//console.log(Z1);
 	C1 = C0 * M;
 	C2 = C0 * (1 - M * M) / 4;
 	D = (1 - C2) * (1 - C2 - C1 * M);
@@ -209,9 +236,9 @@ function directSolution() {
 	U = 2 * (S1 - D0);
 	W = 1 - 2 * P * Math.cos(U);
 	V = Math.cos(U + D0);
-	console.log(X);
+	//console.log(X);
 	X = C2 * C2 * Math.sin(D0) * Math.cos(D0 * (2 * V * V - 1));
-	console.log();
+	//console.log();
 	Y = 2 * P * V * W * Math.sin(D0);
 	S2 = D0 + X - Y;
 	S8 = Math.sin(S2);
@@ -225,19 +252,22 @@ function directSolution() {
 	modFn();
 	S3 = AN;
 	H = C1 * (1 - C2) * S2 - C1 * C2 * S8 * Math.cos(S1 + S1 - S2);
+	//console.log(AN);
 	L2 = L1 + S3 - H;
 	YY = -M;
 	XX = -(N * S9 - P8 * S8);
 
 	modFn();
 	Z2 = AN;
+	//console.log("Z2=" + Z2);
 }
 
 //FIXING ROUTINE - was basic subroutine 770
 function fixingRoutine() {
-	//traceList += ", " + arguments.callee.name;
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	//console.log(Z1);
 	A1 = F1 * Math.sin(A_arr[0]);
-    console.log(A_arr);
 	B1 = Math.cos(A_arr[0]) - Math.cos(B_arr[0]);
 	C1 = Math.sin(B_arr[0]);
 	//console.log(A_arr);
@@ -245,7 +275,13 @@ function fixingRoutine() {
 	B2 = Math.cos(A_arr[1]) - Math.cos(B_arr[1]);
 	C2 = Math.sin(B_arr[1]);
 	E1 = Z_arr[0][0];
-
+	//console.log(A_arr, Z_arr, F2);
+	//logArray = ['C', 'S', 'K', 'R', 'YY', 'XX'];
+	//logString = buildDebugStrings(logArray);
+	//console.log(logString.bas);
+	//console.log(logString.js);
+	//console.log( "F1=" + F1, "A1=" + A1,  "B1=" + B1,  "C1=" + C1,  "A2=" + A2,  "B2=" + B2,  "C2=" + C2,  "E1=" + E1, );
+	//console.log(F1,F2);
 	if (F1 == -1) {
 		E1 = Z_arr[1][0];
 	}
@@ -255,26 +291,31 @@ function fixingRoutine() {
 	if (F2 == -1) {
 		E2 = Z_arr[1][1];
 	}
-
+	//E2 = 3.246153;
+	//console.log(E2);
 	C = B1 * C2 * Math.cos(E2) - B2 * C1 * Math.cos(E1);
 	S = B1 * C2 * Math.sin(E2) - B2 * C1 * Math.sin(E1);
 	K = B2 * A1 - B1 * A2;
 	R = Math.sqrt(C * C + S * S);
 	YY = S;
 	XX = C;
-	console.log(B_arr);
+	//console.log( "AN=" + AN + "C=" + C,  "S=" + S,  "K=" + K,  "R=" + R,  "YY=" + YY,  "XX=" + XX, );	
 	modFn();
-	console.log(AN);
+	//console.log(A1, A2, B1, B2, C1, C2, E1, E2);
+	//AN = isNaN(AN) ? 0 : AN;
+	//console.log(AN);
     G = AN;
 	XX = K / R;
-
 	asin();
 	Z = G + A0 * AN;
-	
+	//logVals(308);
+
+	//console.log(G, A0, AN);
 	YY = B2;
 	XX = C2 * Math.cos(Z - E2) + A2;
 	//console.log("line 266: " + AN)
     modFn();
+	//console.log(L2);
 	S0 = AN;
 
 	if (F2 == 1) {
@@ -286,16 +327,17 @@ function fixingRoutine() {
         L1 = L_arr[1][1];
 	}
 	Z1 = Z;
-	
+	//AN = isNaN(AN) ? 0 : AN;
+	//console.log(Z1);
 	directSolution();
-	
+	//console.log(L2);
 	P0 = P2;
 	L0 = L2;
 	P = Math.atan(Math.tan(P0) / (1 - C0));
 	P = P / RD;
 	X = L0 / RD;
 	M0 = 360;
-
+	//console.log(L0);
 	modFnSetup();
 	L = X;
 	
@@ -313,19 +355,20 @@ function fixingRoutine() {
 
 function asin()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     let boola = XX == 0 ? -1 : 0;
     let boolb = XX < 0 ? -1 : 0;
     AN=Math.atan(Math.sqrt(1 - XX * XX) / (XX -1e-9 * boola))-PI * boolb;
 }
 
-function ItdValidContinue(i)
-{
-    A_arr[i] = A/21295.8736;
-    //console.log(A_arr);
-}
-
 function doWork()
 {
+	
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	//console.log("doWork");
+	
     for(let i=0;i<2;i++)
     {
         P1 = P_arr[0][i];
@@ -334,6 +377,7 @@ function doWork()
         L2 = L_arr[1][i];
         setUpVars(i);
     }
+	
     G_arr[0] = 0;
     G_arr[1] = 0;
 	//console.log( "P1=" + P1,  "L1=" + L1,  "P2=" + P2,  "L2=" + L2, );
@@ -341,23 +385,33 @@ function doWork()
 
 function math1()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     X = parseInt(M0 * X + 0.5)/M0;
 }
 
-function math2()
+// secondary phase correct if time delay >= 537 micro secs
+function math2() 
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     P = 129.04398 / T - 0.40758 + 0.645765438e-3 * T;
 }
 
+// secondary phase correct if time delay < 537 micro secs
 function math3()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     P = 2.7412979 / T - 0.32774624 - 3 * T;
 }
 
 function math4(i)
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     T = 21282.3593 * S0;
-	//T = 21282.3593 * S0;
+	// secondary phase correction
     if(T >= 537)
     {
         math2();
@@ -365,12 +419,17 @@ function math4(i)
         math3();
     }
     T_arr[i] = T + P;
-	console.log(T);
+	//console.log(T);
 }
 
 function setUpVars(i)
 {
+	
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	//console.log("Z1=" + Z1, " Z2=" + Z2);
     reverseSolution();
+	//console.log(Z1, Z2);
     B_arr[i] = S0;
     Z_arr[0][i] = Z1; 
     Z_arr[1][i] = Z2; 
@@ -379,6 +438,8 @@ function setUpVars(i)
 
 function useAcosQatn()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     acos();
     X = V * RD;
     qatn();
@@ -386,64 +447,90 @@ function useAcosQatn()
 
 function acos()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     S = Math.sign(X);
     X = Math.abs(X);
     H = parseInt(X);
     M0 = 1;
+	//console.log(V);
     modFnSetup();
     V = X * 100;
     X = V;
-    modFnSetup();
-    V = S * ((100 * X/60 + parseInt(V)) / 60 + H);
 	//console.log("X=" + X);
+    modFnSetup();
+	//console.log("X=" + X);
+    V = S * ((100 * X/60 + parseInt(V)) / 60 + H);
+	
 }
 
 function modFnSetup()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	//console.log(X, M0);
     X = X - M0 * parseInt(X/M0);
+	//X = isNaN(X) ? 0 : X;
+	//M0 = isNaN(M0) ? 0 : M0;
+	//console.log(X);
     modFn();
+	//console.log(X);
 }
 
 function modFn()
 {
+	
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	
     let xxBoola = XX == 0 ? -1 : 0;
 	let xxBoolb = XX < 0 ? -1 : 0;
-	
 	AN = Math.atan(YY / (XX - 1e-9 * xxBoola)) - PI * xxBoolb;
-    //console.log("line 399: " + xxBoolb)
-	//console.log("XX=" + XX + " YY=" + YY);
 }
 
 function qatn()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     X = Math.atan((1-C0) * Math.tan(X));
 }
 
 function setF1AndF2()
 {
+	
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     F1 = 1;
 	F2 = 1;
     $error = false;
+	
 	//IF G1$=G2$ THEN GOTO 300
-	if (P_arr[0][0] == P_arr[0][1] && L_arr[0][0] != 0 && L_arr[0][1] != 0) {
+	//console.log( "L_arr=" + L_arr, );
+	if (P_arr[0][0] == P_arr[0][1] && L_arr[0][0] == L_arr[0][1]) {
+		doWork();		
+	}
+	else if (P_arr[0][0] == P_arr[1][1] && L_arr[0][0] == L_arr[1][1]) {
 		F2 = -1;
+		doWork();	
 	}
-	else if (P_arr[0][0] == P_arr[1][1] && L_arr[0][0] != 0 && L_arr[1][1] != 0) {
+	else if (P_arr[1][0] == P_arr[1][1] && L_arr[1][0] == L_arr[1][1]) {
 		F1 = -1;
+		doWork();
 	}
-	else if (P_arr[1][0] == P_arr[1][1] && L_arr[1][0] != 0 && L_arr[1][1] != 0) {
+	else if (P_arr[1][0] == P_arr[0][1] && L_arr[1][0] == L_arr[0][1]) {
 		F2 = 2;
-	}
-	else if (P_arr[1][0] = P_arr[0][1] && L_arr[1][0] != 0 && L_arr[0][1] != 0) {
-        F1 = 1;
-        F2 = 1;
+		doWork();
     } else {
 		$error = "No Triplet Possible";
 	}
+	
 }
 
 function setZzAndAn()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	//console.log(XX);
     ZZ = Math.sqrt(1 - XX * XX);
     let boola = ZZ == 0 ? -1 : 0;
 	AN = Math.atan(XX / (ZZ -1e-9 * boola));
@@ -452,7 +539,9 @@ function setZzAndAn()
 
 // reverse solution - was basic subroutine 650
 function reverseSolution() {
-	traceList += ", " + arguments.callee.name;
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
+	
 	L3 = L2 - L1;
 	P3 = (P2 - P1) / 2;
 	P4 = (P1 + P2) / 2;
@@ -464,9 +553,8 @@ function reverseSolution() {
 	//let p6sq = P6 * P6;
 	L = P6 * P6 + H * Math.sin(L3 / 2) ** 2;
 	XX = Math.sqrt(L);
-	
+	//console.log(Z_arr);
     setZzAndAn();
-
 	D0 = 2 * AN;
 	//console.log(AN);
 	U = 2 * P8 * P8 * P7 * P7 / (1 - L);
@@ -477,8 +565,8 @@ function reverseSolution() {
 	
 	D = 4 * T * T;
 	E = 2 * Math.cos(D0);
+	
 	A = D * E;
-	//console.log(A);
 
 	//console.log("---------");console.log( "AN=" + AN + "   D0=" + D0,  "U=" + U,  "V=" + V,  "X=" + X,  "Y=" + Y,  "T=" + T,  "D=" + D,  "T=" + T,  "E=" + E,  "A=" + A, );
 	C = T - (A - E) / 2;
@@ -501,7 +589,7 @@ function reverseSolution() {
 
 	YY = P6 * L9;
 	XX = P9 * L8;
-	
+	//console.log(D0);
     modFn();
 	T1 = AN;
 	YY = -P7 * L9;
@@ -511,19 +599,23 @@ function reverseSolution() {
 	T2 = AN;
 	M0 = TP;
 	X = T1 + T2;
+	//console.log(T1, T2);
 
 	modFnSetup();
 	Z1 = X;
 	X = T1 - T2;
-	
+	//console.log(T1, T2);
     modFnSetup();
 	Z2 = X;
+	//console.log("Z2=" + Z2);
 }
 
 /* 
 	The code below is adapted from the Perl code 	
 */
 function findSlave(GRI, loranDelay) {
+	//traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	//traceList += "<td>X=" + X + "</td></tr>";
 	let ret = "";
 
 	if (GRI == "9960") {
@@ -567,6 +659,7 @@ function findSlave(GRI, loranDelay) {
 
 
 function getTowerData() {
+	
 	let ret = {};
 	towerData = {
 		"5930": {
@@ -709,7 +802,7 @@ function logVals(calledFromLine) {
 	console.log("N8=" + N8);
 	console.log("N9=" + N9);
 
-	console.log("PI=" + P1);
+	console.log("PI=" + PI);
 	console.log("P0=" + P0);
 	console.log("P1=" + P1);
 	console.log("P1_arr=" + P1_arr);
@@ -762,14 +855,17 @@ function logVals(calledFromLine) {
 
 function buildString()
 {
+	traceList += "<tr><td>" + arguments.callee.name + "</td>";
+	traceList += "<td>X=" + X + "</td></tr>";
     C$ = " ";
-	console.log(X);
+	//X = isNaN(X) ? 0 : X;
+	//console.log(X);
     if(X < 0)
     {
         C$ = "-";
         X = -X;
     }
-	console.log(X);
+	//console.log(X);
     X = X + 1 / 7200;
     X0 = parseInt(X);
     C$ = C$ + X0.toString() + " ";
@@ -788,25 +884,29 @@ function buildString()
 function buildDebugStrings(vars)
 {
 	var basicString = 'PRINT ';
+	var basicLogString = '';
 	var jsString = 'console.log(';
 	var ret = [];
 	for(vr of vars)
 	{
-		vars
 		basicString += ' "' + vr + '=";' + vr + ';';
+		basicLogString += 'PRINT #1,' + ' "' + vr + '=";' + vr + ';:' + 'PRINT #1, CHR$(10);:';
 		jsString += ' "' + vr + '=" + ' + vr + ', ';
 	}
 	ret['bas'] = basicString;
+	ret['basLog'] = basicLogString;
 	ret['js'] = jsString + ');';
 	return ret;
 }
-//let dbg = buildDebugStrings(['D0','U','V','X','Y','T','D','T','E','A']);
+//let dbg = buildDebugStrings(['G', 'A0','AN']);
 //console.log(dbg.js);
 //console.log(dbg.bas);
 
 GRI = 9960;
-var loran1 = 26600;
-var loran2 = 41400;
+//var loran1 = 26600;
+//var loran2 = 41400;
+var loran1 = 12153.31;
+var loran2 = 44451.83;
 
 convertLoranToLL(GRI, loran1, loran2);
 console.log("LAT  = " + P$ + ", LONG = " + C$);
@@ -819,4 +919,98 @@ console.log("LAT  = " + P$ + ", LONG = " + C$);
         } else {
 			console.log("ERROR: ITD NOT VALID FOR " + G$[i]);
 		}
+
+		modFnSetup line 410: the last value of X is NaN, which may be the cause of the above error
 */
+//console.log(traceList);
+var varlist = ['A2'
+,'A'
+,'A1'
+,'A$'
+,'AN'
+,'A0'
+,'B2'
+,'B1'
+,'B$'
+,'B'
+,'C0'
+,'C1'
+,'C2'
+,'C0$'
+,'C$'
+,'C'
+,'D'
+,'D9'
+,'D0'
+,'E1'
+,'E2'
+,'F1'
+,'F2'
+,'C0'
+,'F0'
+,'G'
+,'G1$'
+,'G2$'
+,'G$'
+,'G'
+,'H'
+,'I$'
+,'I9$'
+,'ITD'
+,'K'
+,'L2'
+,'L1'
+,'L'
+,'L0'
+,'L1'
+,'M'
+,'M0'
+,'N1'
+,'N2'
+,'N3'
+,'N4'
+,'N5'
+,'N6'
+,'N7'
+,'N8'
+,'N9' 
+,'N'
+,'N0'
+,'PI'
+,'P$'
+,'P2'
+,'P2'
+,'P8'
+,'P9'
+,'P1'
+,'P'
+,'P0'
+,'R'
+,'RD'
+,'S0'
+,'S1'
+,'S2'
+,'S8'
+,'S9'
+,'S3'
+,'TP'
+,'T'
+,'U'
+,'V'
+,'W$'
+,'W'
+,'X'
+,'XX'
+,'YY'
+,'Y'
+,'ZZ'
+,'Z'
+,'Z'
+,'Z1'
+,'Z8'
+,'Z9'
+,'Z2'
+];
+let dbg = buildDebugStrings(varlist);
+//console.log(dbg.basLog);
+//PRINT #1, CHR$(10);: PRINT #1, "ItdValidContinue X=";X;:
