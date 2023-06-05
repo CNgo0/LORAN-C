@@ -1,7 +1,7 @@
 # LORAN-C
 
 ## What is this?
->The Loran system is a radio aid to navigation which utilizes<br>
+>The LORAN system is a radio aid to navigation which utilizes<br>
 the principle of hyperbolic fixing. The locus of points for which<br>
 the difference in arrival time of synchronized signals from a pair<br>
 of transmitters is constant determines a hyperbolic line of<br>
